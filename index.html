@@ -4,20 +4,58 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity Web Player | StakeStack</title>
+  <title>Unity Web Player | X_Test</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
+  <style>
+    /* Force Reown/Web3Modal to align correctly over the Unity Canvas */
+    w3m-modal {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 2147483647 !important;
+      /* Max z-index */
+      pointer-events: none;
+      /* Let clicks pass through the overlay background if needed, but the modal itself catches them */
+    }
+
+    /* Ensure the internal modal captures events */
+    w3m-modal::part(modal) {
+      pointer-events: auto;
+    }
+
+    /* Scale fix for smaller embedded frames */
+    @media (max-width: 500px) {
+      w3m-modal {
+        transform: scale(0.8);
+        transform-origin: center center;
+      }
+    }
+
+    /* HIDDEN ELEMENTS: Footer, Fullscreen Button, Logo */
+    #unity-footer,
+    #unity-fullscreen-button,
+    #unity-logo-title-footer,
+    #unity-build-title {
+      display: none !important;
+    }
+  </style>
 
   <!-- Twitter Player Card Metadata -->
   <meta name="twitter:card" content="player">
   <meta name="twitter:site" content="@playstackmon">
   <meta name="twitter:title" content="StackMon">
-  <meta name="twitter:description" content="Play StakMon!">
+  <meta name="twitter:description" content="Play Stackmon!">
 
-  <meta name="twitter:player" content="https://stackmon.vercel.app/index.html">
+  <meta name="twitter:player" content="https://x-testing.vercel.app/index.html">
   <meta name="twitter:player:width" content="500">
   <meta name="twitter:player:height" content="900">
-  <meta name="twitter:image" content="https://stackmon.vercel.app/TemplateData/cover.png">
+  <meta name="twitter:image" content="https://x-testing.vercel.app/TemplateData/cover.png">
 </head>
 
 <body>
@@ -33,9 +71,20 @@
     <div id="unity-footer">
       <div id="unity-logo-title-footer"></div>
       <div id="unity-fullscreen-button"></div>
-      <div id="unity-build-title">StakeStack</div>
+      <div id="unity-build-title">X_Test</div>
     </div>
   </div>
+
+  <!-- Embedded Tweet Overlay -->
+  <div id="twitter-embed-container"
+    style="position: absolute; bottom: 20px; right: 20px; z-index: 100; max-width: 300px; display: none;">
+    <blockquote class="twitter-tweet">
+      <p lang="zxx" dir="ltr"><a href="https://t.co/mIbhFpZmcz">https://t.co/mIbhFpZmcz</a></p>&mdash; Ugly (@ugly_null)
+      <a href="https://twitter.com/ugly_null/status/2003946399130702128?ref_src=twsrc%5Etfw">December 24, 2025</a>
+    </blockquote>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+  <!-- You can toggle 'display: block' on the above div to show it, or I can add a button for you. For now, it's safer to keep it hidden or clearly overlayed so it doesn't break the game view. -->
   <script>
     var canvas = document.querySelector("#unity-canvas");
 
@@ -65,16 +114,16 @@
     }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/Build.loader.js";
+    var loaderUrl = buildUrl + "/X.loader.js";
     var config = {
       arguments: [],
-      dataUrl: buildUrl + "/Build.data",
-      frameworkUrl: buildUrl + "/Build.framework.js",
-      codeUrl: buildUrl + "/Build.wasm",
+      dataUrl: buildUrl + "/X.data",
+      frameworkUrl: buildUrl + "/X.framework.js",
+      codeUrl: buildUrl + "/X.wasm",
       streamingAssetsUrl: "StreamingAssets",
-      companyName: "RuptureLabs",
-      productName: "StakeStack",
-      productVersion: "0.1",
+      companyName: "DefaultCompany",
+      productName: "X_Test",
+      productVersion: "1.0",
       showBanner: unityShowBanner,
     };
 
@@ -111,8 +160,8 @@
 
     } else {
       // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-      canvas.style.width = "500px";
-      canvas.style.height = "900px";
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
     }
 
     document.querySelector("#unity-loading-bar").style.display = "block";
@@ -125,7 +174,7 @@
       }).then((unityInstance) => {
         document.querySelector("#unity-loading-bar").style.display = "none";
         document.querySelector("#unity-fullscreen-button").onclick = () => {
-          document.makeFullscreen('unity-container');
+          unityInstance.SetFullscreen(1);
         };
 
       }).catch((message) => {
